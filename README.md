@@ -38,19 +38,28 @@ graph TD
 
 ```
 
-    # 📂 Repository Structure
-    ```Plaintext
-    mia-dod-nervous-system/
+## 📂 Repository Structure
+
+```text
+mia-dod-nervous-system/
 ├── terraform/          # 🏗️ IaC: FedRAMP-High project hardening
+│   ├── modules/        # Reusable security & DB components
+│   ├── main.tf         # Primary orchestrator
+│   └── variables.tf    # Input definitions
 ├── ingestion/          # 📡 Senses: NiFi flows & Pub/Sub schemas
 ├── pipeline/           # 🧠 Brain: Dataflow / Apache Beam (Python)
+│   ├── src/            # Core transformation logic
+│   └── setup.py        # Worker dependency configuration
 ├── database/           # 💾 Memory: AlloyDB / PostgreSQL ScaNN Schema
+│   ├── migrations/     # Versioned schema changes
+│   └── schema/         # Initial ScaNN & pgvector setup
 ├── agent/              # 🤖 Agent: AI Reasoning & Recall Logic
 ├── docs/               # 📜 Compliance: Security & FedRAMP logs
 ├── .env.example        # 🔑 Security: Environment template
 └── README.md           # 📖 Roadmap & Documentation
 ```
-# 🛠️ Tech Stack
+
+## 🛠️ Tech Stack
 Ingestion: 📡 Apache NiFi, GCP Pub/Sub
 
 Stream Processing: 🧠 Google Dataflow (Apache Beam), Python, Vertex AI
@@ -61,9 +70,9 @@ Infrastructure: 🏗️ Terraform, Google Cloud Platform (GCP)
 
 Security: 🛡️ VPC Service Controls, CMEK, IAM Workload Identity
 
-# ⚙️ Quick Start
+## ⚙️  Quick Start
 
-### 1. Environment Setup
+## 1. Environment Setup
 Clone the repository and prepare your local secrets:
 
 ```Bash
@@ -71,19 +80,19 @@ cp .env.example .env
 # Edit .env with your GCP project details
 ```
 
-### 2. Infrastructure Provisioning
+## 2. Infrastructure Provisioning
 ```Bash
-cd terraform
+kcd terraform
 terraform init
 terraform apply
 ```
-### 3. Launch the Nervous System
+## 3. Launch the Nervous System
 Deploy the Dataflow pipeline to begin real-time vectorization:
 ```Bash
 cd pipeline
 python main_pipeline.py --project YOUR_PROJECT --runner DataflowRunner
 ```
-### 🛡️ Security & Compliance
+## 🛡️ Security & Compliance
 This architecture is built specifically for high-sensitivity workloads:
 
 Data Isolation: All traffic is routed via VPC Service Controls to prevent exfiltration.
@@ -92,6 +101,6 @@ Zero-Trust Identity: No service account keys are stored; the system uses Short-L
 
 Auditability: Every "Agentic" decision is logged via Cloud Audit Logs for transparency.
 
-### 👨💻 Author
-Alf Baez Architecting Secure Intelligence for National Security.
+## 👨💻 Author
+Alf Baez Architecting Secure & Intelligence C 
 
