@@ -72,13 +72,13 @@ It actually suggests specific CREATE INDEX statements based on the queries it ob
 
 
 # Key PostgreSQL \pg_ Commands (CLI)
-When you are in the terminal (psql), these are your "Swiss Army Knife" commands:
+The "Swiss Army Knife" in the terminal (psql):
 
 \di+: List all indexes, their sizes, and descriptions.
 
 \dt+: List all tables with persistence and size info.
 
-\watch [SEC]: Append this to any query (e.g., SELECT ... \watch 2) to create a live-updating dashboard in your terminal.
+\watch [SEC]: Append this to any query (e.g., SELECT ... \watch 2) to create a live-updating dashboard in the terminal.
 
 \conninfo: Verify which user and SSL/TLS certificate you are currently using (critical for FedRAMP audits).
 
@@ -110,7 +110,7 @@ pg_dump -h [IP] -U postgres --format=plain --no-owner --no-acl [DB_NAME] > backu
 
 pg_dumpall: Exports the entire cluster (all databases, roles, and groups).
 
-Note: In Cloud SQL, you must exclude the system database: --exclude-database=cloudsqladmin.
+Note: In Cloud SQL, exclude the system database: --exclude-database=cloudsqladmin.
 
 pg_restore: Used to restore backups created with the custom (-Fc) or directory formats of pg_dump.
 
@@ -119,13 +119,13 @@ pg_restore -h [IP] -U postgres -d [DB_NAME] -v "my_backup.dump"
 ## 3. Performance & Monitoring
 While the GCP Console has Query Insights, these CLI tools are better for "live" debugging.
 
-pg_bench: Runs a benchmark test on your instance. This is great for testing if a new machine type (e.g., moving from 4 vCPU to 8 vCPU) actually improves your specific workload.
+pg_bench: Runs a benchmark test on the instance. This is great for testing if a new machine type (e.g., moving from 4 vCPU to 8 vCPU) actually improves your specific workload.
 
 pg_bench -i -s 10 [DB_NAME] (Initializes a test schema)
 
 pg_bench -c 10 -t 1000 [DB_NAME] (Runs 10 clients, 1000 transactions each)
 
-pg_activity: A "top-like" application for PostgreSQL server queries (requires installation via pip or your package manager). It shows running queries, PIDs, and waiting states in real-time.
+pg_activity: A "top-like" application for PostgreSQL server queries (requires installation via pip or package manager). It shows running queries, PIDs, and waiting states in real-time.
 
 ## 4. Maintenance (Internal SQL Commands)
 
