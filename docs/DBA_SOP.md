@@ -62,10 +62,13 @@ Action: Trigger a manual AlloyDB backup before a major schema migration.
 
 Action: Manually trigger VACUUM ANALYZE on specific partitions after a massive Dataflow batch upload.
 
-# Tools
+# DBA Reference: Performance & Maintenance Toolkit
 
 For deep-dive query optimization and visual plan analysis, I rely on pgAdmin 4. However, for real-time monitoring of a streaming environment like the MIA-DoD project, I use AlloyDB System Insights to track the Columnar Engine's health, and psql for fast, scripted maintenance tasks. I believe in using the right tool for the specific layer of the stack I'm troubleshooting.
 
+### Partitioning Strategy Reference
+
+In the MIA-DoD architecture, we use Declarative Partitioning to manage large-scale telemetry.
 
 ## Index Advisor within Query Insights.
 It actually suggests specific CREATE INDEX statements based on the queries it observes causing high load.
