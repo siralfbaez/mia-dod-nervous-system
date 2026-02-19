@@ -41,3 +41,23 @@ If a Dataflow bug causes data corruption, use PITR to restore to a state exactly
 * alloydb.googleapis.com/db/postgres/transaction_id_age: Critical for preventing XID wraparound.
 
 * alloydb.googleapis.com/db/storage/utilization: Watch for spikes in WAL (Write-Ahead Log) size.
+
+
+# Index Fine-Tuning
+### Activity: Analyzing Index Performance
+
+1) Identify Bloat: Run pgstattuple on intel_logs_scann_idx.
+
+2) Reindex: Use REINDEX INDEX CONCURRENTLY to avoid locking the table during production hours.
+
+3) Tuning: Adjust fillfactor to 80 for tables with high update frequency to reduce page splits.
+
+ # Resilience: Backup & Recovery
+Activity: Manual Snapshot & Point-in-Time Recovery (PITR)
+
+Action: Trigger a manual AlloyDB backup before a major schema migration.
+
+# Performance Tuning (Vacuuming)
+ Monitoring: Check n_dead_tup vs n_live_tup in pg_stat_all_tables.
+
+Action: Manually trigger VACUUM ANALYZE on specific partitions after a massive Dataflow batch upload.
