@@ -1,4 +1,4 @@
-#The Architect's Activities
+# The Architect's Activities
 
 Focus: Schema Design, Data Warehousing, and System Evolution.
 
@@ -15,11 +15,11 @@ Constraint: Ensure Read Pools are utilized for all LLM "Recall" queries to prese
 3) Tuning: Adjust fillfactor to 80 for tables with high update frequency to reduce page splits.
 
 # Resilience: Backup & Recovery
-### Activity: Manual Snapshot & Point-in-Time Recovery (PITR)
+Activity: Manual Snapshot & Point-in-Time Recovery (PITR)
 
 Action: Trigger a manual AlloyDB backup before a major schema migration.
 
 # Performance Tuning (Vacuuming)
-### Monitoring: Check n_dead_tup vs n_live_tup in pg_stat_all_tables.
+Monitoring: Check n_dead_tup vs n_live_tup in pg_stat_all_tables.
 
-### Action: Manually trigger VACUUM ANALYZE on specific partitions after a massive Dataflow batch upload.
+Action: Manually trigger VACUUM ANALYZE on specific partitions after a massive Dataflow batch upload.
