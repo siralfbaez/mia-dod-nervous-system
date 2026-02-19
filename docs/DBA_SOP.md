@@ -129,13 +129,25 @@ pg_activity: A "top-like" application for PostgreSQL server queries (requires in
 
 ## 4. Maintenance (Internal SQL Commands)
 
-```Text
+These functions are essential for managing active sessions and inspecting database health directly from the `psql` interface.
 
-Command,Purpose
-pg_terminate_backend(pid),Forcefully kills a stuck or long-running query.
-pg_cancel_backend(pid),Gently stops a query without killing the connection.
-pg_reload_conf(),Applies changes made to configuration files (limited in GCP).
-pg_size_pretty(...),Converts bytes into readable formats (MB/GB) for table/DB sizes.
+| Command | SQL Syntax | Purpose |
+| :--- | :--- | :--- |
+| **Terminate Session** | `SELECT pg_terminate_backend(pid);` | Forcefully kills a stuck query/connection. |
+| **Cancel Query** | `SELECT pg_cancel_backend(pid);` | Stops the query but keeps the connection alive. |
+| **Check Table Size** | `SELECT pg_size_pretty(pg_total_relation_size('table_name'));` | Converts bytes to readable MB/GB format. |
+| **Check DB Size** | `SELECT pg_size_pretty(pg_database_size('db_name'));` | Shows total disk space used by a database. |
 
-```
+#### Usage Examples:
+
+**Identify and Kill Long-Running Queries:**
+```sql
+-- Find queries running for more than 5 minutes
+SELECT pid, now() - xact_start AS duration, query
+FROM pg_stat_activity
+WHERE (now() - xact_start) > interval '5 minutes'
+AND state = 'active';
+
+-- Terminate a specific PID found above
+SELECT pg_terminate_backend(12345);
 
