@@ -1,6 +1,6 @@
 # The Architect's Activities
 
-Focus: Schema Design, Data Warehousing, and System Evolution.
+Focus: Overal System Design, Schema Design, Data Warehousing, and System Evolution.
 
 # Vector Design & High Availability
 Constraint: Ensure Read Pools are utilized for all LLM "Recall" queries to preserve Primary write-headroom.
