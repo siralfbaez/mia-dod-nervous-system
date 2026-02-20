@@ -46,13 +46,13 @@ Optimize Dataflow throughput by managing Shuffle service efficiency and addressi
 ### The Workflow: Dataflow to AlloyDB AI
 The "Mission"; RAG (Retrieval-Augmented Generation) pipeline. The flow:
 
-Ingestion: Dataflow pulls raw text/images from Pub/Sub or GCS.
+1) Ingestion: Dataflow pulls raw text/images from Pub/Sub or GCS.
 
-Real-time Vectorization: Within a DoFn, Dataflow makes a call to a Vertex AI Embedding Model (like text-embedding-004).
+2) Real-time Vectorization: Within a DoFn, Dataflow makes a call to a Vertex AI Embedding Model (like text-embedding-004).
 
-Enrichment: Attach that high-dimensional vector (the "embedding") to the original data record.
+3) Enrichment: Attach that high-dimensional vector (the "embedding") to the original data record.
 
-The Sink: Dataflow writes the record + the vector into AlloyDB.
+4) The Sink: Dataflow writes the record + the vector into AlloyDB.
 
 ...[PlaceHolder:proper and accurate steps/instructions are being added/updated as I progress]
 Activity: Manual Snapshot & Point-in-Time Recovery (PITR)
