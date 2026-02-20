@@ -8,9 +8,9 @@ End-to-End Pipeline Design: I have architected a low-latency, "always-on" stream
 ## 🧠 Advanced Dataflow (Apache Beam) Patterns
 To meet the requirements for the Google technical lead, we implement the following advanced streaming patterns:
 
-* Stateful Processing & Windowing
-    Windowing Strategy: We utilize Fixed Windows for standard telemetry and Session <br>
-    Windows to group related intelligence events that occur in bursts.
+1. Stateful Processing & Windowing
+* Windowing Strategy: We utilize Fixed Windows for standard telemetry and Session <br>
+     Windows to group related intelligence events that occur in bursts.
 <br>
 * Handling Lateness: We implement Allowed Lateness with custom Triggers to ensure that data arriving after the watermark is still incorporated into the state without restarting the pipeline.
 
