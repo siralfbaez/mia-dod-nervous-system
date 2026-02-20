@@ -40,6 +40,18 @@ Optimize Dataflow throughput by managing Shuffle service efficiency and addressi
 ###  Pub/Sub "Seek" for Disaster Recovery
 "Seek" is our "Rewind" button. Our, Replay strategy.
 
+Zero Data Loss, I'm keeping in mind these three pillars:
+
+* Idempotency: "Since I am replaying data using Seek, I ensure my writes to AlloyDB or BigQuery are idempotent (using UPSERT or unique IDs) so I don't create duplicate records."
+* Snapshots: "I automate snapshots before any major pipeline update."
+* Checkpointing: "I rely on Dataflow’s internal checkpointing to ensure that even if a worker fails, the state is preserved."
+
+| Tool | Action | Scenario |
+| :--- | :--- | :--- |
+| Pub/Sub DLQ | Automatic | Message is "un-processable" (format/system error). |
+| Dataflow Side Output | Code-defined | Business logic failure (e.g., "Age" cannot be negative). |
+| Pub/Sub Seek | Manual/Scripted | Pipeline bug found; need to re-run the last 4 hours of data. |
+
 
 # AlloyDB (PostgreSQL)
 
@@ -53,6 +65,31 @@ The "Mission"; RAG (Retrieval-Augmented Generation) pipeline. The flow:
 3) Enrichment: Attach that high-dimensional vector (the "embedding") to the original data record.
 
 4) The Sink: Dataflow writes the record + the vector into AlloyDB.
+
+### AlloyDB Integration (The "ScaNN" Advantage)
+To bridging the gap between Dataflow and AlloyDB AI. I build pipelines that perform real-time vectorization via Vertex AI endpoints, sinking enriched data into AlloyDB with ScaNN-optimized indexing for high-performance recall
+
+# Compliance & Governance:
+Keeping in mind our US data is a serious national security matter; I’m deploying data platforms within FedRAMP-High boundaries. This includes implementing VPC Service Controls, CMEK (Customer-Managed Encryption Keys) for data-at-rest in Pub/Sub, and ensuring all Dataflow worker communication remains within private network perimeters.
+
+### Private Network Perimeters: "No Public IPs"
+In a FedRAMP High mission, the Dataflow workers should never have a public IP address.<br>
+
+FedRAMP High is System and Communications Protection (SC-7).<br>
+In my designs, I ensure that all Dataflow workers communicate solely over the Google private backbone. By disabling public IPs and utilizing Private Service Connect (PSC) endpoints, I maintain a hardened boundary that satisfies FedRAMP High's strict 'Boundary Protection' controls.
+
+* The Setup:
+  * ```--usePublicIps=false```: This flag ensures workers only have internal VPC IPs. 
+  * Private Google Access: You must enable this on your subnetwork so workers can still reach Google APIs (like BigQuery or Vertex AI) without needing the public internet. 
+  * Firewall Rules: You restrict worker-to-worker communication to only the necessary ports for shuffling data (usually TCP 12345-12346).
+
+  * <br>
+
+#### Few more notes 
+* FIPS 140-2: Encryption (via KMS) uses FIPS-validated modules.
+* Assured Workloads: I deploy within an Assured Workloads folder to automate the enforcement of these FedRAMP High "guardrails."
+* Shared Responsibility Model: I Acknowledge that while Google secures the infrastructure, I and anyone  are responsible for the secure configuration of the pipeline (CMEK, VPC SC).
+
 
 ...[PlaceHolder:proper and accurate steps/instructions are being added/updated as I progress]
 Activity: Manual Snapshot & Point-in-Time Recovery (PITR)
