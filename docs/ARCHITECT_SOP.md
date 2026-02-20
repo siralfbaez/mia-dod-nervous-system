@@ -6,7 +6,7 @@ End-to-End Pipeline Design: I have architected a low-latency, "always-on" stream
 
 
 ## 🧠 Advanced Dataflow (Apache Beam) Patterns
-To meet the requirements for the Google technical lead, we implement the following advanced streaming patterns:
+Leverage Stateful (State & Timer API) processing for use cases like sessionization or complex event detection. I utilize Side Inputs for real-time enrichment and CoGroupByKey for joining disparate streams (e.g., matching sensor data with asset metadata) in a distributed environment.
 
 1. Stateful Processing & Windowing
    * Windowing Strategy: We utilize Fixed Windows for standard telemetry and Session <br>
@@ -23,15 +23,38 @@ To meet the requirements for the Google technical lead, we implement the followi
    * Data Integrity: Before reaching AlloyDB, every PCollection is validated against a central schema.
 
    * Error Handling: Invalid records are diverted to a Dead Letter Queue (DLQ) in Cloud Storage/BigQuery for manual audit, ensuring the primary database remains clean and FedRAMP-compliant.
+     * Purpose: To catch "valid" messages that fail your business logic or schema validation (e.g., a field is missing, or an insert into AlloyDB fails due to a constraint violation). 
+     * How: You use a ```TupleTag``` to create a "Side Output."
+
+
+### Performance & Scaling:
+Optimize Dataflow throughput by managing Shuffle service efficiency and addressing Data Skew (Hot Keys). I leverage Streaming Engine and Vertical Autoscaling to maintain sub-second processing latencies while optimizing cost-per-message.
 
 # ⚡ Pub/Sub Messaging Backbone
    * Message Ordering: Critical for defense telemetry. We enable Ordering Keys at the topic level to ensure sequential processing in Dataflow.
-
    * Resiliency: We utilize Pub/Sub Snapshots to allow for 7-day data replay capabilities in the event of a downstream database migration or failure.
+   * The Pub/Sub Level (Transport Failures): 
+     * Purpose: To catch messages that simply cannot be acknowledged (e.g., the message format is so corrupted the Dataflow worker crashes before it can even process it, or the "Max Delivery Attempts" are exceeded). 
+     * How: In the Google Cloud Console or CLI, you edit the subscription and point it to a "Dead Letter Topic."
+
+###  Pub/Sub "Seek" for Disaster Recovery
+"Seek" is our "Rewind" button. Our, Replay strategy.
+
 
 # AlloyDB (PostgreSQL)
 
-...[PlaceHolder]
+### The Workflow: Dataflow to AlloyDB AI
+The "Mission"; RAG (Retrieval-Augmented Generation) pipeline. The flow:
+
+Ingestion: Dataflow pulls raw text/images from Pub/Sub or GCS.
+
+Real-time Vectorization: Within a DoFn, Dataflow makes a call to a Vertex AI Embedding Model (like text-embedding-004).
+
+Enrichment: Attach that high-dimensional vector (the "embedding") to the original data record.
+
+The Sink: Dataflow writes the record + the vector into AlloyDB.
+
+...[PlaceHolder:proper and accurate steps/instructions are being added/updated as I progress]
 Activity: Manual Snapshot & Point-in-Time Recovery (PITR)
 
 Action: Trigger a manual AlloyDB backup before a major schema migration.
