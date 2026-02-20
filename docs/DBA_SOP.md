@@ -64,7 +64,10 @@ Action: Manually trigger VACUUM ANALYZE on specific partitions after a massive D
 
 # DBA Reference: Performance & Maintenance Toolkit
 
-For deep-dive query optimization and visual plan analysis, I rely on pgAdmin 4. However, for real-time monitoring of a streaming environment like the MIA-DoD project, I use AlloyDB System Insights to track the Columnar Engine's health, and psql for fast, scripted maintenance tasks. I believe in using the right tool for the specific layer of the stack I'm troubleshooting.
+For deep-dive query optimization and visual plan analysis, I rely on tools like ```pgAdmin 4``` and 
+```DataGrip```. 
+However, for real-time monitoring of a streaming environment like the MIA-DoD project, 
+I use ```AlloyDB System Insights``` to track the Columnar Engine's health, and psql for fast, scripted maintenance tasks. I believe in using the right tool for the specific layer of the stack I'm troubleshooting.
 
 ### Partitioning Strategy Reference
 
@@ -77,14 +80,10 @@ It actually suggests specific CREATE INDEX statements based on the queries it ob
 # Key PostgreSQL \pg_ Commands (CLI)
 The "Swiss Army Knife" in the terminal (psql):
 
-\di+: List all indexes, their sizes, and descriptions.
-
-\dt+: List all tables with persistence and size info.
-
-\watch [SEC]: Append this to any query (e.g., SELECT ... \watch 2) to create a live-updating dashboard in the terminal.
-
+\di+: List all indexes, their sizes, and descriptions. <br>
+\dt+: List all tables with persistence and size info. <br>
+\watch [SEC]: Append this to any query (e.g., SELECT ... \watch 2) to create a live-updating dashboard in the terminal. <br>
 \conninfo: Verify which user and SSL/TLS certificate you are currently using (critical for FedRAMP audits).
-
 
 # Reference
 
