@@ -1,0 +1,5 @@
+Given the following user query, rephrase it into a search-optimized semantic string
+for a vector database. Remove conversational filler and focus on tactical entities.
+
+USER QUERY: {{user_query}}
+REFINED SEARCH STRING:
