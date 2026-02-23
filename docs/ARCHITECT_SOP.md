@@ -37,6 +37,34 @@ This is where we bridge the gap between Pub/Sub and the database.
 * Pub/Sub IDs: We use the ```message_id ``` as a unique key.
 * Stateful Processing: In Dataflow, we use ValueState to check if an ID has been seen within a specific sliding window, preventing duplicate writes to AlloyDB if the pipeline retries.
 
+### Dataflow Logic Framework
+#### Pipeline Design Framework (The Four Questions)
+To ensure robust, low-latency ingestion into AlloyDB, every Dataflow pipeline in this architecture is designed by answering the four core questions of stream processing:
+
+1) **WHAT is being computed?**
+
+   * Definition: The transformations applied (e.g., parsing raw telemetry, calculating moving averages, or generating vector embeddings).
+
+   * Implementation: Using ```ParDo ``` and ```MapElements ``` for stateless logic; Combine for aggregations.
+
+2) **WHERE in event-time is it computed?**
+
+   * Definition: How we group data into windows (Tumbling, Hopping, or Session).
+
+   * Implementation: We primarily utilize **Sliding Windows** (e.g., 10-minute lookback with 1-minute updates) for real-time threat detection in telemetry.
+
+3) **WHEN in processing-time are results materialized?**
+
+   * Definition: The "Trigger" that decides when to emit the windowed result to AlloyDB.
+
+   * Implementation: We trigger based on the __Watermark__ passing the end of the window, with allowed lateness for edge-sensor stability.
+
+4) **HOW do refinements relate?**
+
+   * Definition: How we handle multiple versions of the same window (e.g., if late data arrives).
+
+   * Implementation: We use Accumulating Mode to provide the most up-to-date intelligence, allowing AlloyDB to perform an ```UPSERT``` on the specific window record.
+
 ### Performance & Scaling:
 Optimize Dataflow throughput by managing Shuffle service efficiency and addressing Data Skew (Hot Keys). I leverage Streaming Engine and Vertical Autoscaling to maintain sub-second processing latencies while optimizing cost-per-message.
 
